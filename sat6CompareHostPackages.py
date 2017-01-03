@@ -88,7 +88,6 @@ print "There are %s packages that differ from %s -> %s"  % (len(pkg_diff), sourc
 for package in sorted(pkg_diff):
     print "\t%s" % package
 print
-print
 pkg_diff = list(set(targethostPkg_list) - set(sourcehostPkg_list))
 print "There are %s packages that differ from %s -> %s"  % (len(pkg_diff), targethost, sourcehost)
 for package in sorted(pkg_diff):
