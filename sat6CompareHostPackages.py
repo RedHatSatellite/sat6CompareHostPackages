@@ -33,7 +33,7 @@ parser.add_option("--target-host", dest="targethost", help="Target Host for comp
 if not (options.login and options.server and options.sourcehost and options.targethost):
     print "Must specify a login, server, sourcehost, and targethost (will prompt for password if omitted).  See usage:"
     parser.print_help()
-    print "\nExample usage: ./sat6CompareHostPackages.py -l admin -p sat6.example.com --sourcehost foo.example.com --target-host bar.example.com"
+    print "\nExample usage: ./sat6CompareHostPackages.py -l admin -s sat6.example.com --source-host foo.example.com --target-host bar.example.com"
     sys.exit(1)
 else:
     login = options.login
