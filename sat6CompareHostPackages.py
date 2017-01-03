@@ -85,12 +85,12 @@ for package in get_host_package_list(targethost):
 
 pkg_diff = list(set(sourcehostPkg_list) - set(targethostPkg_list))
 print "There are %s packages that differ from %s -> %s"  % (len(pkg_diff), sourcehost, targethost)
-for package in pkg_diff:
+for package in sorted(pkg_diff):
     print "\t%s" % package
 print
 print
 pkg_diff = list(set(targethostPkg_list) - set(sourcehostPkg_list))
 print "There are %s packages that differ from %s -> %s"  % (len(pkg_diff), targethost, sourcehost)
-for package in pkg_diff:
+for package in sorted(pkg_diff):
     print "\t%s" % package
 
