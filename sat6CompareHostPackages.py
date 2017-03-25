@@ -20,6 +20,7 @@ import base64
 import sys
 import ssl
 from optparse import OptionParser
+from rpmUtils.miscutils import splitFilename
 
 parser = OptionParser()
 parser.add_option("-l", "--login", dest="login", help="Login user", metavar="LOGIN")
@@ -28,6 +29,7 @@ parser.add_option("-p", "--password", dest="password", help="Password for specif
 parser.add_option("-s", "--server", dest="server", help="FQDN of sat6 instance", metavar="SERVER")
 parser.add_option("--source-host", dest="sourcehost", help="Source Host for comparison", metavar="sourcehost")
 parser.add_option("--target-host", dest="targethost", help="Target Host for comparison", metavar="targethost")
+parser.add_option("--package-names-only", action="store_true", dest="packagenamesonly", default=False, help="Only compare package names", metavar="packagenamesonly")
 (options, args) = parser.parse_args()
 
 if not (options.login and options.server and options.sourcehost and options.targethost):
@@ -41,6 +43,7 @@ else:
     server = options.server
     sourcehost = options.sourcehost
     targethost = options.targethost
+    packagenamesonly = options.packagenamesonly
 
 if not password: password = getpass.getpass("%s's password:" % login)
 
@@ -77,11 +80,19 @@ def get_host_package_list(host):
 
 sourcehostPkg_list = []
 for package in get_host_package_list(sourcehost):
-    sourcehostPkg_list.append(package['nvra'])
+    if (packagenamesonly):
+        (n, a, e, v, r) = splitFilename(package['nvra'])
+        sourcehostPkg_list.append(n)
+    else:
+        sourcehostPkg_list.append(package['nvra'])
 
 targethostPkg_list = []
 for package in get_host_package_list(targethost):
-    targethostPkg_list.append(package['nvra'])
+    if (packagenamesonly):
+        (n, a, e, v, r) = splitFilename(package['nvra'])
+        targethostPkg_list.append(n)
+    else:
+        targethostPkg_list.append(package['nvra'])
 
 pkg_diff = list(set(sourcehostPkg_list) - set(targethostPkg_list))
 print "There are %s packages that differ from %s -> %s"  % (len(pkg_diff), sourcehost, targethost)
@@ -92,4 +103,3 @@ pkg_diff = list(set(targethostPkg_list) - set(sourcehostPkg_list))
 print "There are %s packages that differ from %s -> %s"  % (len(pkg_diff), targethost, sourcehost)
 for package in sorted(pkg_diff):
     print "\t%s" % package
-
